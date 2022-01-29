@@ -1,9 +1,8 @@
 const { defineConfig } = require("@vue/cli-service");
-const { ModuleFederationPlugin } =
-require("webpack").container;
 
 module.exports = defineConfig({
   transpileDependencies: true,
+  publicPath: '/board-game/',
 
   devServer: {
     host: "0.0.0.0",
