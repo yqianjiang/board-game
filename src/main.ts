@@ -1,1 +1,2 @@
+import './registerServiceWorker'
 import("./bootstrap")
