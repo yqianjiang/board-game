@@ -42,7 +42,7 @@ const toggle = (
 const complete = (matrix: number[], action: number[], nCols: number): void => {
   for (let i = 1; i < matrix.length; i++) {
     for (let j = 0; j < nCols; j++) {
-      if ((matrix[i - 1] >> (nCols - 1 - j)) & 1) {
+      if (matrix[i - 1] & (1 << (nCols - 1 - j)) > 0) {
         // 若matrix[i - 1]从左到右的第j位是1
         toggle(matrix, action, nCols, i, j);
       }
