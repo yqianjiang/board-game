@@ -1,2 +1,0 @@
-import './registerServiceWorker'
-import("./bootstrap")
