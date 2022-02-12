@@ -15,11 +15,11 @@
       ><button @click="init">应用</button>
       <div>累计用时：{{ timeCounter }}</div>
     </div>
-    <div class="row" v-for="(rowState, i) in stateMatrix" :key="rowState">
+    <div class="row" v-for="(rowState, i) in stateMatrix" :key="i">
       <input
         class="toggle-box"
         v-for="(state, j) in rowState"
-        :key="state"
+        :key="j"
         :class="{
           'toggle-box--error': errorMatrix[i][j],
           'toggle-box--box-top': i === 0 || i === 3 || i === 6,
@@ -27,13 +27,14 @@
           'toggle-box--box-bottom': i === 8,
           'toggle-box--box-right': j === 8,
         }"
-        v-model="rowState[j]"
+        v-model.number="stateMatrix[i][j]"
+        type="number"
         :disabled="!!originState[i][j]"
       />
     </div>
     <div class="btn-wrap">
       <button @click="reset">清空</button>
-
+      <button @click="findAllSolve">提示</button>
       <button @click="solve">解答</button>
     </div>
   </div>
@@ -45,16 +46,21 @@ import { useTimer } from "@/utils/useTimer";
 import { initBoard } from "@/utils/useBoardGame";
 import { checkNumber, solveSudoku } from "@/utils/solveSudoku";
 import type { MatrixType } from "@/utils/solveSudoku";
+import { solveSudokuAll } from "@/utils/solveSudokuAll";
+
+const getRandomInt = (range = 9, scale=1): number => {
+  return Math.floor((Math.random() * range)/scale);
+};
 
 const initSudokuBoard = () => {
   const matrix = initBoard(9, 9);
   // 把第一行乱序填入1-9
   for (let k = 1; k < 10; k++) {
     // 随机选一个格子填数
-    let j = Math.floor(Math.random() * 9);
+    let j = getRandomInt();
     while (matrix[0][j] > 0) {
       // 重新选格子
-      j = Math.floor(Math.random() * 9);
+      j = getRandomInt();
     }
     matrix[0][j] = k;
   }
@@ -100,8 +106,7 @@ export default defineComponent({
       }
       if (res) {
         stateMatrix.value = res.map((x) =>
-          x.map((y) =>
-            Math.floor((Math.random() * 6) / +level.value) ? y : ""
+          x.map((y) => getRandomInt(6, +level.value) ? y : ""
           )
         ); // 可以在res的基础上挖空
       } else {
@@ -115,6 +120,7 @@ export default defineComponent({
         console.log("loaded, 用时", new Date().getTime() - start);
       }
     };
+
     init();
 
     const solve = () => {
@@ -126,13 +132,16 @@ export default defineComponent({
       }
     };
 
+    const findAllSolve = () => {
+      solveSudokuAll(stateMatrix.value);
+    };
+
     // 数字填完自动停止计时
     watch(stateMatrix, ()=> {
       for (const row of stateMatrix.value) {
         for (const item of row) {
           // 还有空格，未完成
           if (!item) {
-            console.log(item);
             return;
           }
         }
@@ -149,6 +158,7 @@ export default defineComponent({
       init,
       reset,
       solve,
+      findAllSolve
     };
   },
 });
