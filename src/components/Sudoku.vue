@@ -48,8 +48,8 @@ import { checkNumber, solveSudoku } from "@/utils/solveSudoku";
 import type { MatrixType } from "@/utils/solveSudoku";
 import { solveSudokuAll } from "@/utils/solveSudokuAll";
 
-const getRandomInt = (range = 9, scale=1): number => {
-  return Math.floor((Math.random() * range)/scale);
+const getRandomInt = (range = 9, scale = 1): number => {
+  return Math.floor((Math.random() * range) / scale);
 };
 
 const initSudokuBoard = () => {
@@ -106,8 +106,7 @@ export default defineComponent({
       }
       if (res) {
         stateMatrix.value = res.map((x) =>
-          x.map((y) => getRandomInt(6, +level.value) ? y : ""
-          )
+          x.map((y) => (getRandomInt(6, +level.value) ? y : ""))
         ); // 可以在res的基础上挖空
       } else {
         stateMatrix.value = matrix;
@@ -136,18 +135,32 @@ export default defineComponent({
       solveSudokuAll(stateMatrix.value);
     };
 
+    const handleFinish = () => {
+      // 解答完成，本局结束
+      stopTimer();
+      console.log('解答完成！')
+    };
+
     // 数字填完自动停止计时
-    watch(stateMatrix, ()=> {
-      for (const row of stateMatrix.value) {
-        for (const item of row) {
-          // 还有空格，未完成
-          if (!item) {
-            return;
+    watch(
+      stateMatrix,
+      () => {
+        for (const row of stateMatrix.value) {
+          for (const item of row) {
+            // 还有空格，未完成
+            if (!item) {
+              return;
+            }
           }
         }
-      }
-      stopTimer();
-    }, {deep: true})
+        if (errorMatrix.value.join("").includes("true")) {
+          console.log("还有错！");
+        } else {
+          handleFinish();
+        }
+      },
+      { deep: true }
+    );
 
     return {
       level,
@@ -158,7 +171,7 @@ export default defineComponent({
       init,
       reset,
       solve,
-      findAllSolve
+      findAllSolve,
     };
   },
 });
