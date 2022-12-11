@@ -28,6 +28,7 @@ export default defineComponent({
     LifeGame: defineAsyncComponent(() => import("./components/LifeGame.vue")),
     LightGame: defineAsyncComponent(() => import("./components/LightGame.vue")),
     Sudoku: defineAsyncComponent(() => import("./components/Sudoku.vue")),
+    Tetris: defineAsyncComponent(() => import("./components/Tetris.vue")),
   },
   setup() {
     const currentTab = ref(0);
@@ -55,6 +56,7 @@ export default defineComponent({
       },
       { text: "关灯游戏", name: "LightGame", properties: {} },
       { text: "数独", name: "Sudoku", properties: {} },
+      { text: "俄罗斯方块", name: "Tetris", properties: {} },
     ]);
     const currentTabComponent = computed(() => {
       return tabs.value[currentTab.value];
