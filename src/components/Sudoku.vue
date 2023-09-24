@@ -1,7 +1,7 @@
 <template>
   <div class="game-wrap">
     <h1>数独</h1>
-    <div>
+    <div class="stack">
       <label
         >难度：
         <select v-model="level">
@@ -13,6 +13,32 @@
           <option value="6">空白</option>
         </select> </label
       ><button @click="init">应用</button>
+              <!-- 暂停/继续按钮 -->
+              <button
+          v-if="gameState === 'over'"
+          @click="startGame"
+        >
+          开始
+        </button>
+        <button
+          v-if="gameState === 'running'"
+          @click="pausedGame"
+        >
+          暂停
+        </button>
+        <button
+          v-else-if="gameState === 'paused'"
+          @click="resumeGame"
+        >
+          继续
+        </button>
+        <!-- 重新开始按钮 -->
+        <button
+          v-if="gameState !== 'over'"
+          @click="restartGame"
+        >
+          开新的一局
+        </button>
       <div>累计用时：{{ timeCounter }}</div>
     </div>
     <div class="row" v-for="(rowState, i) in stateMatrix" :key="i">
@@ -33,7 +59,7 @@
       />
     </div>
     <div class="btn-wrap">
-      <button @click="reset">清空</button>
+      <button @click="reset">清空重来</button>
       <button @click="findAllSolve">提示</button>
       <button @click="solve">解答</button>
     </div>
@@ -73,9 +99,10 @@ export default defineComponent({
     properties: Object,
   },
   setup() {
-    const { restartTimer, stopTimer, timeCounter } = useTimer();
+    const { restartTimer, stopTimer, resumeTimer, timeCounter } = useTimer();
     const [N_ROWS, N_COLS] = [9, 9];
     const level = ref(3);
+    const gameState = ref("over");
     const stateMatrix = ref<MatrixType[][]>(initBoard(N_ROWS, N_COLS));
     const originState = ref(stateMatrix.value);
     const errorMatrix = computed(() => {
@@ -90,6 +117,27 @@ export default defineComponent({
     const reset = () => {
       restartTimer();
       stateMatrix.value = originState.value.map((x) => x.map((y) => y));
+    };
+
+    const startGame = () => {
+      gameState.value = "running";
+      restartTimer();
+    };
+
+    const pausedGame = () => {
+      gameState.value = "paused";
+      stopTimer();
+    };
+
+    const resumeGame = () => {
+      gameState.value = "running";
+      resumeTimer();
+    };
+
+    const restartGame = () => {
+      stopTimer();
+      init();
+      startGame();
     };
 
     const init = () => {
@@ -112,7 +160,7 @@ export default defineComponent({
         stateMatrix.value = matrix;
       }
       originState.value = stateMatrix.value.map((x) => x.map((y) => y));
-      restartTimer();
+      // restartTimer();
 
       if (count > 1) {
         console.log(count);
@@ -121,6 +169,7 @@ export default defineComponent({
     };
 
     init();
+    stopTimer();
 
     const solve = () => {
       const res = solveSudoku(originState.value);
@@ -172,6 +221,11 @@ export default defineComponent({
       reset,
       solve,
       findAllSolve,
+      gameState,
+      startGame,
+      pausedGame,
+      resumeGame,
+      restartGame,
     };
   },
 });
@@ -179,6 +233,14 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.stack {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
 .toggle-box {
   flex: 1;
   box-sizing: border-box;
@@ -217,5 +279,8 @@ export default defineComponent({
 }
 .btn-wrap {
   margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
 }
 </style>

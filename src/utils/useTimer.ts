@@ -13,12 +13,16 @@ export const useTimer = () => {
 
   const restartTimer = () => {
     startTime.value = new Date().getTime();
-    stop.value = false;
-    requestAnimationFrame(timeCountLoop);
+    resumeTimer();
   };
 
   const stopTimer = () => {
     stop.value = true;
+  }
+
+  const resumeTimer = () => {
+    stop.value = false;
+    requestAnimationFrame(timeCountLoop);
   }
 
   // 循环更新当前时间
@@ -30,5 +34,5 @@ export const useTimer = () => {
   };
   requestAnimationFrame(timeCountLoop);
 
-  return { restartTimer, stopTimer, timeCounter };
+  return { restartTimer, stopTimer, resumeTimer, timeCounter };
 };

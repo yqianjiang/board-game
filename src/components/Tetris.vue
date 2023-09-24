@@ -1,46 +1,47 @@
 <template>
   <div class="game-wrap">
     <h1>俄罗斯方块</h1>
-    <p>当前分数：{{score}}</p>
-    <p>最高得分：{{ highScore }}</p>
-    <p>游戏速度：<input :disabled="gameState!=='over'" v-model="speed" type="number"></p>
-    <!-- 暂停/继续按钮 -->
-    <button
-      v-if="gameState === 'over'"
-      @click="startGame"
-    >
-      开始
-    </button>
-    <button
-      v-if="gameState === 'running'"
-      @click="pausedGame"
-    >
-      暂停
-    </button>
-    <button
-      v-else-if="gameState === 'paused'"
-      @click="resumeGame"
-    >
-      继续
-    </button>
-
-    <!-- 重新开始按钮 -->
-    <button
-      v-if="gameState !== 'over'"
-      @click="restartGame"
-    >
-      重新开始
-    </button>
+    <div class="stack toolbar">
+      <span>当前分数：{{score}}</span>
+      <span>最高得分：{{ highScore }}</span>
+      <div>游戏速度：<input :disabled="gameState!=='over'" v-model="speed" type="number"></div>
+        <!-- 暂停/继续按钮 -->
+        <button
+          v-if="gameState === 'over'"
+          @click="startGame"
+        >
+          开始
+        </button>
+        <button
+          v-if="gameState === 'running'"
+          @click="pausedGame"
+        >
+          暂停
+        </button>
+        <button
+          v-else-if="gameState === 'paused'"
+          @click="resumeGame"
+        >
+          继续
+        </button>
+        <!-- 重新开始按钮 -->
+        <button
+          v-if="gameState !== 'over'"
+          @click="restartGame"
+        >
+          重新开始
+        </button>
+    </div>
 
     <div class="game-main">
       <div class="grid">
-        <div v-for="(row, idx) in combinedGrid" :key="row+idx" class="row">
-          <div v-for="(cell, j) in row" :key="cell+j" class="cell" :class="{ 'color-1': cell === 'active'}"></div>
+        <div v-for="(row, idx) in combinedGrid" :key="idx" class="row">
+          <div v-for="(cell, j) in row" :key="j" class="cell" :class="{ 'color-1': cell === 'active'}"></div>
         </div>
       </div>
       <div class="next-piece">
         <p>Next piece: </p>
-        <div v-for="row in nextPiece" :key="row" class="row">
+        <div v-for="row in nextPiece" :key="row[0]" class="row">
           <div v-for="cell in row" :key="cell" class="cell" :class="{ 'color-1': cell}"></div>
         </div>
       </div>
@@ -255,37 +256,36 @@ export default {
 <style scoped>
 .game-main {
   margin-top: 12px;
+  position: relative;
   display: flex;
 }
 
-.grid {
-  /* Old code
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(20, 1fr);
-  */
-  
-  /* New code */
+.next-piece {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.stack {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
+.grid {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+
 .row {
-  /* Old code
-  grid-column: 1 / 11;
-  */
-  
-  /* New code */
   display: flex;
   width: 100%;
 }
 
 .cell {
-  /* Old code
-  grid-column: 1 / 2;
-  */
-  
-  /* New code */
   height: 20px;
   width: 20px;
   background-color: rgb(203, 203, 203);
@@ -325,25 +325,7 @@ export default {
 .color-7 {
   background-color: #fff;
 }
-/* .grid {
-  display: grid;
-  grid-template-rows: repeat(10, 20px);
-  grid-template-columns: repeat(20, 20px);
-  grid-gap: 1px;
-}
-
-.cell {
-  width: 20px;
-  height: 20px;
-  background-color: rgb(100, 97, 97);
-  border: #333;
-}
-
-.next-piece {
-  display: grid;
-  grid-template-columns: repeat(4, 20px);
-}
-
+/*
 .active {
   background-color: #333;
   border: 1px solid #555;
