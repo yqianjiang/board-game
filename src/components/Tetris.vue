@@ -1,6 +1,7 @@
 <template>
   <div class="game-wrap">
     <h1>俄罗斯方块</h1>
+    <p>俄罗斯方块是一款经典的俄罗斯视频游戏，你需要控制下落的方块，使它们在底部排列成完整的水平行，一旦一行被填满，就会消失并腾出空间。目标是尽可能堆叠方块，避免屏幕顶部被方块堆满，挑战你的反应速度和空间认知能力，享受无尽的游戏乐趣！</p>
     <div class="stack toolbar">
       <span>当前分数：{{score}}</span>
       <span>最高得分：{{ highScore }}</span>
@@ -264,14 +265,6 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-.stack {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
 }
 
 .grid {

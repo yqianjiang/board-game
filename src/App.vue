@@ -101,4 +101,11 @@ export default defineComponent({
 .row {
   display: flex;
 }
+.stack {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 </style>

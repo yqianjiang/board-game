@@ -1,6 +1,8 @@
 <template>
   <div class="game-wrap">
     <h1>关灯游戏</h1>
+    <p>游戏板上有一组灯泡，有些是亮的（黄色），有些是暗的（灰色）。</p>
+    <p>你的目标是通过点击它们，改变它们的状态，把所有的灯泡都熄灭。但要注意，每次点击一个灯泡都会影响其上、下、左、右相邻的灯泡。</p>
     <div class="row" v-for="(rowState, i) in stateMatrix" :key="rowState">
       <div
         class="toggle-box"
@@ -12,11 +14,13 @@
         @click="toggle(i, j)"
       ></div>
     </div>
-    <button @click="reset">重置</button>
-    <button @click="init">随机开局</button>
-    <button @click="complete">自动填充</button>
-    <button @click="autoSolve" v-if="solutions[0][0][0]">自动解答</button>
-    <button @click="showSolution" v-else>显示答案</button>
+    <div class="stack btn-group">
+      <button @click="init">随机开局</button>
+      <button @click="reset">灯全亮开局</button>
+      <!-- <button @click="complete">自动填充</button> -->
+      <button @click="autoSolve" v-if="solutions[0][0][0]">自动解答</button>
+      <button @click="showSolution" v-else>显示答案</button>
+    </div>
     <div class="history-text">操作历史{{ "\n" + history.join("\n") }}</div>
     <div class="history-text" v-if="solutions[0][0][0]">
       <div>参考答案</div>
@@ -75,7 +79,7 @@ export default defineComponent({
       }
       stateMatrix.value = matrix;
     };
-
+    init();
     // 根据第一行填充剩下的
     const complete = () => {
       for (let i = 1; i < stateMatrix.value.length; i++) {
@@ -141,5 +145,9 @@ export default defineComponent({
 }
 .history-text {
   white-space: pre-wrap;
+}
+
+.btn-group {
+  margin: 12px 0;
 }
 </style>

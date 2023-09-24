@@ -1,6 +1,18 @@
 <template>
   <div class="game-wrap">
     <h1>生命游戏</h1>
+    <p>欢迎来到生命游戏自定义版！这是一个基于细胞自动机理论的益智游戏，让你在虚拟世界中观察生命的演化和变化。生命游戏起初由英国数学家约翰·康威于1970年创造，如今你可以在这里自定义初始模式并探索生命的奇妙之旅。</p>
+    <p>游戏玩法说明：<button @click="showIntro = !showIntro">展开/收起</button></p>
+    <template v-if="showIntro">
+      <p><strong>初始模式设置：</strong>
+  在游戏开始时，你可以自由绘制一个初始的细胞模式。这些细胞可以是活的（表示为亮色）或死的（表示为暗色）。用你的创造力，设计一个独特的初始模式，然后点击“演化”来看看它将如何发展演化。</p>
+  <p><strong>演化规则：</strong>游戏中的每一轮演化都根据以下规则进行：
+  
+  活细胞周围有2或3个相邻的活细胞，它将继续存活。
+  活细胞周围有过多的相邻活细胞（超过3个），它将死亡，模拟“过度拥挤”。
+  死细胞周围有3个相邻的活细胞，它将复活，模拟“繁殖”。</p>
+  <p><strong>观察演化：</strong>点击“演化”后，游戏将自动进行细胞演化。观察细胞群体如何变化，有时会形成有趣的图案、结构或者稳定的生命形式。如果你的模式最终死绝，可以尝试不同的起始模式，看看是否能够找到一个更稳定的生命形式。</p>
+    </template>
     <div class="row" v-for="(rowState, i) in stateMatrix" :key="rowState">
       <div
         class="toggle-box"
@@ -11,10 +23,12 @@
         @click="toggle(i, j)"
       ></div>
     </div>
-    <button @click="start">开始</button>
-    <button @click="stop = true">停止</button>
-    <button @click="goNext">下一步</button>
-    <button @click="reset">重置</button>
+    <div class="stack btn-group">
+      <button @click="start">演化</button>
+      <button @click="stop = true">暂停</button>
+      <button @click="goNext">演化一步</button>
+      <button @click="reset">重置</button>
+    </div>
   </div>
 </template>
 
@@ -66,6 +80,7 @@ export default defineComponent({
     const stateMatrix = ref([[0]]);
     const prevState = ref([[0]]);
     const stop = ref(false);
+    const showIntro = ref(false);
     const goNext = () => {
       prevState.value = stateMatrix.value;
       stateMatrix.value = gameOfLife(stateMatrix.value);
@@ -93,7 +108,7 @@ export default defineComponent({
     };
     watchEffect(reset);
 
-    return { stateMatrix, goNext, start, toggle, reset, stop };
+    return { stateMatrix, goNext, start, toggle, reset, stop, showIntro };
   },
 });
 </script>
@@ -109,5 +124,8 @@ export default defineComponent({
   &--dead {
     background: rgb(70, 70, 70);
   }
+}
+.btn-group {
+  margin-top: 12px;
 }
 </style>
