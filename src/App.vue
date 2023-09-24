@@ -95,7 +95,7 @@ export default defineComponent({
 .game-wrap {
   border: 1px solid #ccc;
   border-radius: 2px;
-  padding: 10px;
+  padding: 12px 24px;
   text-align: center;
 }
 .row {
@@ -107,5 +107,19 @@ export default defineComponent({
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+h1 {
+  margin: 16px 0;
+}
+
+// 移动端
+@media screen and (max-width: 600px) {
+  .game-wrap {
+    padding: 12px;
+  }
+  .demo {
+    padding: 20px 0;
+  }
 }
 </style>

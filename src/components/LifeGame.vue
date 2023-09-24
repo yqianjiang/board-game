@@ -2,7 +2,7 @@
   <div class="game-wrap">
     <h1>生命游戏</h1>
     <p>欢迎来到生命游戏自定义版！这是一个基于细胞自动机理论的益智游戏，让你在虚拟世界中观察生命的演化和变化。生命游戏起初由英国数学家约翰·康威于1970年创造，如今你可以在这里自定义初始模式并探索生命的奇妙之旅。</p>
-    <p>游戏玩法说明：<button @click="showIntro = !showIntro">展开/收起</button></p>
+    <p>游戏玩法说明：<button @click="showIntro = !showIntro">{{ showIntro ? "收起" : "查看" }}</button></p>
     <template v-if="showIntro">
       <p><strong>初始模式设置：</strong>
   在游戏开始时，你可以自由绘制一个初始的细胞模式。这些细胞可以是活的（表示为亮色）或死的（表示为暗色）。用你的创造力，设计一个独特的初始模式，然后点击“演化”来看看它将如何发展演化。</p>

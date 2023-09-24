@@ -223,6 +223,7 @@ export default {
     }
 
     const handleKeydown = (event: KeyboardEvent) => {
+        event.preventDefault();
         switch (event.key) {
           case 'ArrowLeft':
             controls.moveLeft();
